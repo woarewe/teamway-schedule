@@ -5,7 +5,8 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.2.1"
 
-# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "dotenv-rails", "~> 2.8", ">= 2.8.1", require: "dotenv/rails-now"
+
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
 # Use postgresql as the database for Active Record
