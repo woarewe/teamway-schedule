@@ -7,4 +7,6 @@ class API < Grape::API
   get "/hello" do
     "World !"
   end
+
+  add_swagger_documentation mount_path: "/swagger"
 end
