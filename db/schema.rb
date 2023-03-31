@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_28_175533) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_31_210005) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "admins", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "authentication_credentials", force: :cascade do |t|
+    t.string "username", null: false
+    t.text "password_digest", null: false
+    t.string "owner_type", null: false
+    t.bigint "owner_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_id", "owner_type"], name: "index_authentication_credentials_on_owner_id_and_owner_type", unique: true
+    t.index ["username"], name: "index_authentication_credentials_on_username", unique: true
+  end
 
 end

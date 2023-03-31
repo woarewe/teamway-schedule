@@ -13,5 +13,12 @@ AllCops:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
+Style/ClassAndModuleChildren:
+  Exclude:
+    - test/**/*_test.rb
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
 Style/Documentation:
   Enabled: false
