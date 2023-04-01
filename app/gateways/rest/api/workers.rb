@@ -8,6 +8,7 @@ module REST
       mount Create
       mount Update
       mount Delete
+      mount Get
     end
   end
 end

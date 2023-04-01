@@ -13,6 +13,10 @@ class WorkerPolicy < ApplicationPolicy
 
   alias delete? create?
 
+  def show?
+    admin? || organization.worker?(user)
+  end
+
   private
 
   def organization

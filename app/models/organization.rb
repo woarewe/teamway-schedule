@@ -11,4 +11,8 @@ class Organization < ApplicationRecord
   def manager?(worker)
     manager_ids.include?(worker.id)
   end
+
+  def worker?(worker)
+    worker_ids.include?(worker.id)
+  end
 end
