@@ -4,10 +4,7 @@ module REST
   module Serialization
     class Organization < Grape::Entity
       include WithTimestamps
-
-      expose :id do |object, _options|
-        object.external_id
-      end
+      include WithExternalID
 
       expose :name
     end
