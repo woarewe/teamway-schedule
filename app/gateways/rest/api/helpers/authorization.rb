@@ -5,7 +5,7 @@ module REST
     module Helpers
       module Authorization
         def authorize!(object = nil, to:, with: nil, context: {})
-          policy_class = with || "#{object.class.name}Policy"
+          policy_class = with || "#{object.class.name}Policy".constantize
           action = "#{to}?"
           policy = policy_class.new(current_user, object, **context)
           error!({}, 404) unless policy.send(action)
