@@ -13,6 +13,7 @@ module REST
 
         desc "Create a worker"
         post do
+          status 201
           payload = validate!(params, with: Contract)
           payload => { organization_id: external_id, attributes: }
           organization = Organization.find_by(external_id:)
