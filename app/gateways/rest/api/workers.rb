@@ -6,6 +6,7 @@ module REST
       format "json"
 
       mount Create
+      mount Update
     end
   end
 end

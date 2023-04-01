@@ -7,11 +7,19 @@ class WorkerPolicy < ApplicationPolicy
     admin? || organization.manager?(user)
   end
 
+  def update?
+    admin? || organization.manager?(user) || owner?
+  end
+
   private
 
   def organization
     return context.fetch(:organization) if worker.nil?
 
     worker.organization
+  end
+
+  def owner?
+    current_user == worker
   end
 end

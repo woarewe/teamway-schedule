@@ -14,12 +14,11 @@ module REST
         desc "Create a worker"
         post do
           payload = validate!(params, with: Contract)
-          payload => { organization_id: external_id }
+          payload => { organization_id: external_id, attributes: }
           organization = Organization.find_by(external_id:)
           not_found!(:organization_id) if organization.nil?
-          authorize! to: :create, with: WorkerPolicy, context: { organization: }
 
-          payload => { attributes: }
+          authorize! to: :create, with: WorkerPolicy, context: { organization: }
           worker = ::Worker.new(organization:, **attributes)
 
           if worker.save
