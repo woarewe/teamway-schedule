@@ -11,6 +11,8 @@ class WorkerPolicy < ApplicationPolicy
     admin? || organization.manager?(user) || owner?
   end
 
+  alias delete? create?
+
   private
 
   def organization
