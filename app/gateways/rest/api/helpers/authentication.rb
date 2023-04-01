@@ -3,7 +3,7 @@
 module REST
   class API
     module Helpers
-      module Auth
+      module Authentication
         def authenticate!
           @current_user = Services::Authentication.new.call(headers)
         rescue Services::Authentication::Error => error

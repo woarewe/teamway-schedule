@@ -16,3 +16,9 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "API"
   inflect.acronym "REST"
 end
+
+Rails.autoloaders.each do |autoloader|
+  autoloader.inflector.inflect(
+    "external_id" => "ExternalID"
+  )
+end

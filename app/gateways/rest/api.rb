@@ -5,16 +5,17 @@ module REST
     format "json"
     prefix "api"
 
-    helpers Helpers::Auth
+    helpers(
+      Helpers::Authentication,
+      Helpers::Validation,
+      Helpers::Authorization
+    )
 
     before do
       authenticate!
     end
 
-    get "hello" do
-      "World"
-    end
-
+    namespace(:organizations) { mount Organizations }
     add_swagger_documentation mount_path: "/swagger"
   end
 end

@@ -2,7 +2,7 @@
 
 module Tests
   module Helpers
-    module Auth
+    module Authentication
       module_function
 
       include FactoryBot::Syntax::Methods

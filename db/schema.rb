@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_31_210005) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_31_212610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -29,6 +29,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_31_210005) do
     t.datetime "updated_at", null: false
     t.index ["owner_id", "owner_type"], name: "index_authentication_credentials_on_owner_id_and_owner_type", unique: true
     t.index ["username"], name: "index_authentication_credentials_on_username", unique: true
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.uuid "external_id", default: -> { "gen_random_uuid()" }, null: false
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_organizations_on_external_id", unique: true
+    t.index ["name"], name: "index_organizations_on_name", unique: true
   end
 
 end

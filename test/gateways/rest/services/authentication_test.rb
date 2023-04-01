@@ -3,7 +3,7 @@
 require "test_helper"
 
 class REST::Services::AuthenticationTest < ActiveSupport::TestCase
-  include Tests::Helpers::Auth
+  include Tests::Helpers::Authentication
 
   setup do
     @credentials = create_credentials

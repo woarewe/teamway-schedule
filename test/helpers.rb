@@ -4,4 +4,4 @@ module Tests
   module Helpers; end
 end
 
-require_relative "helpers/auth"
+require_relative "helpers/authentication"
