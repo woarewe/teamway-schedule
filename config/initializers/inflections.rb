@@ -19,6 +19,7 @@ end
 
 Rails.autoloaders.each do |autoloader|
   autoloader.inflector.inflect(
-    "external_id" => "ExternalID"
+    "external_id" => "ExternalID",
+    "with_external_id" => "WithExternalID"
   )
 end

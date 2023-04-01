@@ -16,6 +16,11 @@ module REST
           errors = { as => errors }
           error!(errors, status)
         end
+
+        def not_found!(key)
+          errors = { key => Array(I18n.t!("rest.validation.errors.not_found")) }
+          error!(errors, 404)
+        end
       end
     end
   end

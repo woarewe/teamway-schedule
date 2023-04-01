@@ -9,7 +9,8 @@ require_relative "helpers"
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
+    include FactoryBot::Syntax::Methods
+
     parallelize(workers: :number_of_processors)
 
     fixtures :all

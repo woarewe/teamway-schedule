@@ -8,4 +8,8 @@ en:
             Invalid payload for the header %{header}
             Please, use the following format: "%{scheme} Base64(USERNAME:PASSWORD)
           invalid_creds: Invalid username or password
+    validation:
+      errors:
+        not_found: not found
+
   hello: "Hello world"

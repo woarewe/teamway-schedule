@@ -259,6 +259,7 @@ DEPENDENCIES
   bootsnap
   debug
   dotenv-rails (~> 2.8, >= 2.8.1)
+  dry-types (~> 1.7.1)
   dry-validation (~> 1.10)
   factory_bot_rails (~> 6.2.0)
   faker (~> 3.1.1)

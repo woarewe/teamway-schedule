@@ -9,6 +9,7 @@ gem "dotenv-rails", "~> 2.8", ">= 2.8.1", require: "dotenv/rails-now"
 
 gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
+gem "dry-types", "~> 1.7.1"
 gem "dry-validation", "~> 1.10"
 gem "grape", "~> 1.7"
 gem "grape-entity", "~> 1.0.0"
