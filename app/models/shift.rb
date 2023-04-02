@@ -3,6 +3,10 @@
 class Shift < ApplicationRecord
   include ExternalID
 
+  Error = Class.new(StandardError)
+  DoubleBookError = Class.new(Error)
+  PastStartError = Class.new(Error)
+
   DURATION = 8.hours
 
   belongs_to :worker, inverse_of: :shifts

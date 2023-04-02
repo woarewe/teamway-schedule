@@ -4,8 +4,23 @@ FactoryBot.define do
   factory :shift do
     association :worker, factory: :worker
 
-    current_time_zone_time = 1.day.from_now
-    start_at { current_time_zone_time.utc.change(usec: 0) }
-    end_at { (current_time_zone_time + 8.hours).utc.change(usec: 0) }
+    transient do
+      in_zone_time { Time.now.in_time_zone(worker.time_zone) + 1.day }
+    end
+
+    start_at { in_zone_time }
+    end_at { start_at + 8.hours }
+
+    trait :overnight do
+      start_at { in_zone_time.change(hour: 22, min: 0) }
+    end
+
+    trait :same_day do
+      start_at { in_zone_time.beginning_of_day }
+    end
+
+    trait :next_day do
+      start_at { in_zone_time.next_day }
+    end
   end
 end

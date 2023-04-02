@@ -3,7 +3,7 @@ en:
     services:
       authentication:
         errors:
-          missing_header: Header "%{header}" is missing"
+          missing_header: Header "%{header}" is missing
           invalid_format: >
             Invalid payload for the header %{header}
             Please, use the following format: "%{scheme} Base64(USERNAME:PASSWORD)
@@ -11,5 +11,9 @@ en:
     validation:
       errors:
         not_found: not found
+  models:
+    shift:
+      errors:
+        double_book: "The worker already has a shift on %{date}"
 
   hello: "Hello world"

@@ -27,5 +27,13 @@ class Worker < ApplicationRecord
   )
   has_many :shifts, dependent: :destroy, inverse_of: :worker
 
+  def local_date(time)
+    local_time(time).to_date
+  end
+
+  def local_time(time)
+    time.in_time_zone(time_zone)
+  end
+
   enum role: ROLES.zip(ROLES).to_h
 end

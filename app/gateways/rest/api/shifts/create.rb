@@ -17,9 +17,7 @@ module REST
           payload => { worker_id: external_id, attributes: { start_at: }}
           worker = ::Worker.find_by(external_id:)
           not_found(:worker_id) if worker.nil?
-          start_at = start_at.in_time_zone(worker.time_zone)
-          end_at = start_at + ::Shift::DURATION
-          shift = Shift.create!(start_at:, end_at:, worker:)
+          shift = ::Shift::Create.new.call(worker:, start_at:)
           present shift, with: Serialization::Shift
         end
       end

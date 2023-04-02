@@ -7,10 +7,15 @@ class CreateShifts < ActiveRecord::Migration[7.0]
       t.bigint :worker_id, null: false
       t.datetime :start_at, null: false
       t.datetime :end_at, null: false
+      t.date :local_start_date, null: false
+      t.date :local_end_date, null: false
 
       t.timestamps
     end
 
     add_foreign_key :shifts, :workers
+
+    add_index :shifts, [:worker_id, :local_end_date], unique: true
+    add_index :shifts, [:worker_id, :local_start_date], unique: true
   end
 end

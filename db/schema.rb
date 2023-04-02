@@ -45,9 +45,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_01_165334) do
     t.bigint "worker_id", null: false
     t.datetime "start_at", null: false
     t.datetime "end_at", null: false
+    t.date "local_start_date", null: false
+    t.date "local_end_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["external_id"], name: "index_shifts_on_external_id", unique: true
+    t.index ["worker_id", "local_end_date"], name: "index_shifts_on_worker_id_and_local_end_date", unique: true
+    t.index ["worker_id", "local_start_date"], name: "index_shifts_on_worker_id_and_local_start_date", unique: true
   end
 
   create_table "workers", force: :cascade do |t|
