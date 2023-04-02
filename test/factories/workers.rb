@@ -7,6 +7,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     role { Worker::ROLES.to_a.sample }
+    time_zone { TZInfo::Timezone.all.sample.name }
 
     trait :manager do
       role { Worker::Manager.sti_name }

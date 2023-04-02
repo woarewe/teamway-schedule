@@ -9,6 +9,7 @@ module REST
       expose :first_name
       expose :last_name
       expose :role
+      expose :time_zone
     end
   end
 end
