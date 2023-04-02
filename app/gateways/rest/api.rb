@@ -17,6 +17,7 @@ module REST
 
     namespace(:organizations) { mount Organizations }
     namespace(:workers) { mount Workers }
+    namespace(:shifts) { mount Shifts }
 
     add_swagger_documentation mount_path: "/swagger"
   end

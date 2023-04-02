@@ -25,6 +25,7 @@ class Worker < ApplicationRecord
     as: :owner,
     dependent: :destroy
   )
+  has_many :shifts, dependent: :destroy, inverse_of: :worker
 
   enum role: ROLES.zip(ROLES).to_h
 end

@@ -11,7 +11,6 @@ module Tests
       class TestOwner < ApplicationRecord; end
 
       def create_credentials(**params)
-        create_test_owners_table
         credentials = default_attributes.merge(params)
         credentials[:record] = create(:authentication_credentials, **credentials)
         credentials
@@ -25,17 +24,31 @@ module Tests
         other_headers.merge("Authorization" => "#{schema} #{value}")
       end
 
+      def headers_with_auth(credentials, **other_headers)
+        credentials => { username:, password: }
+        token = create_token(username, password)
+        with_auth_header("Bearer", token, **other_headers)
+      end
+
       def default_attributes
         {
-          owner: TestOwner.create,
+          owner: create_test_owner,
           username: Faker::Internet.unique.username,
           password: Faker::Internet.unique.password
         }
       end
 
+      def create_test_owner
+        create_test_owners_table
+        TestOwner.create
+      end
+
       def create_test_owners_table
-        ActiveRecord::Base.connection_pool.with_connection do |connection|
-          connection.create_table(:test_owners, &:timestamps) unless connection.table_exists?(:test_owners)
+        @create_test_owners_table ||= begin
+          ActiveRecord::Base.connection_pool.with_connection do |connection|
+            connection.create_table(:test_owners, &:timestamps) unless connection.table_exists?(:test_owners)
+          end
+          true
         end
       end
     end

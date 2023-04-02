@@ -20,5 +20,11 @@ Style/ClassAndModuleChildren:
 Naming/RescuedExceptionsVariableName:
   PreferredName: error
 
+Style/SymbolArray:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
