@@ -14,37 +14,36 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
 
     execute(payload(worker, shift))
 
-    # assert_equal shift.start_at.change(), created_shift.start_at
-    # assert_equal shift.end_at.round, created_shift.end_at
-    # assert_equal worker.id, created_shift.worker.id
+    assert_creating_shift_with_correct_attributes(shift)
+    assert_response 201
   end
 
   test "preventing booking another shift for the same day when the existing one starts" do
     shift = build(:shift, :overnight, worker:)
-
     execute(payload(worker, shift))
-    assert_response :success
-
     another_shift = build(:shift, :same_day, in_zone_time: shift.start_at, worker:)
+
     execute(payload(worker, another_shift))
-    assert_response 422
+
+    assert_response_with_double_book_error(another_shift)
   end
 
   test "preventing booking another shift for the same day when the existing one ends" do
     shift = build(:shift, :overnight, worker:)
-
     execute(payload(worker, shift))
-    assert_response :success
-
     another_shift = build(:shift, :same_day, in_zone_time: shift.end_at, worker:)
+
     execute(payload(worker, another_shift))
-    assert_response 422
+
+    assert_response_with_double_book_error(another_shift)
   end
 
   test "preventing booking a shift in the past" do
     shift = build(:shift, :in_past, worker:)
+
     execute(payload(worker, shift))
-    assert_response 422
+
+    assert_response_with_booking_in_past_error
   end
 
   private
@@ -72,11 +71,33 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
     }
   end
 
-  def created_shift
-    @created_shift ||= Shift.find_by(external_id: response_body.fetch(:id))
+  def booked_shift
+    @booked_shift ||= Shift.find_by(external_id: response_body.fetch(:id))
   end
 
   def response_body
     JSON.parse(@response.body).with_indifferent_access
+  end
+
+  def assert_response_with_double_book_error(payload)
+    error = response_body.dig(:attributes, :start_at, 0)
+    date = payload.start_at.in_time_zone(worker.time_zone).to_date
+
+    assert_response 422
+    assert_match(/already/, error)
+    assert_match(/#{date.iso8601}/, error)
+  end
+
+  def assert_creating_shift_with_correct_attributes(expected)
+    assert_equal expected.start_at, booked_shift.start_at
+    assert_equal expected.end_at.round, booked_shift.end_at
+    assert_equal worker.id, booked_shift.worker.id
+  end
+
+  def assert_response_with_booking_in_past_error
+    error = response_body.dig(:attributes, :start_at, 0)
+
+    assert_response 422
+    assert_match(/past/, error)
   end
 end

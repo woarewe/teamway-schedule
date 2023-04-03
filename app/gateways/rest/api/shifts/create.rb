@@ -8,7 +8,7 @@ module REST
           def handle_operation_errors
             yield
           rescue ::Shift::DoubleBookError, ::Shift::PastStartError => error
-            wrapped_error!({ start_at: error.message }, 422, as: :attributes)
+            wrapped_error!({ start_at: Array(error.message) }, 422, as: :attributes)
           end
         end
 

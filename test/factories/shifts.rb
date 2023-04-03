@@ -5,7 +5,7 @@ FactoryBot.define do
     association :worker, factory: :worker
 
     transient do
-      in_zone_time { Time.now.in_time_zone(worker.time_zone) + 1.day }
+      in_zone_time { (Time.now.in_time_zone(worker.time_zone) + 1.day).change(usec: 0) }
     end
 
     start_at { in_zone_time }
