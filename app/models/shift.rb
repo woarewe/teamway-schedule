@@ -13,6 +13,8 @@ class Shift < ApplicationRecord
 
   belongs_to :worker, inverse_of: :shifts
 
+  delegate :organization, to: :worker
+
   def duration
     (end_at - start_at).seconds
   end

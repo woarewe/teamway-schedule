@@ -35,5 +35,9 @@ class Worker < ApplicationRecord
     time.in_time_zone(time_zone)
   end
 
+  def manager_of?(worker)
+    worker.organization.manager?(self)
+  end
+
   enum role: ROLES.zip(ROLES).to_h
 end
