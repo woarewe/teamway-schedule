@@ -22,5 +22,9 @@ FactoryBot.define do
     trait :next_day do
       start_at { in_zone_time.next_day }
     end
+
+    trait :in_past do
+      start_at { in_zone_time - 7.days }
+    end
   end
 end

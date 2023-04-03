@@ -3,6 +3,7 @@
 class Shift
   class Create < BaseOperation
     def call(worker:, start_at:)
+      validate_start_at!(start_at)
       attributes = prepare_attributes(worker, start_at)
       handle_duplication_error do
         Shift.create!(worker:, **attributes)
@@ -12,6 +13,10 @@ class Shift
     end
 
     private
+
+    def validate_start_at!(start_at)
+      raise PastStartError, I18n.t!("models.shift.errors.past_start") if start_at.past?
+    end
 
     def prepare_attributes(worker, start_at)
       {

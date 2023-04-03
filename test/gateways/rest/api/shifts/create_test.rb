@@ -41,6 +41,12 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
     assert_response 422
   end
 
+  test "preventing booking a shift in the past" do
+    shift = build(:shift, :in_past, worker:)
+    execute(payload(worker, shift))
+    assert_response 422
+  end
+
   private
 
   attr_reader(

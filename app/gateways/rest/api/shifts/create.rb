@@ -4,6 +4,14 @@ module REST
   class API
     class Shifts
       class Create < Base
+        helpers do
+          def handle_operation_errors
+            yield
+          rescue ::Shift::DoubleBookError, ::Shift::PastStartError => error
+            wrapped_error!({ start_at: error.message }, 422, as: :attributes)
+          end
+        end
+
         class Contract < Dry::Validation::Contract
           json do
             required(:worker_id).filled(:string)
@@ -17,8 +25,10 @@ module REST
           payload => { worker_id: external_id, attributes: { start_at: }}
           worker = ::Worker.find_by(external_id:)
           not_found(:worker_id) if worker.nil?
-          shift = ::Shift::Create.new.call(worker:, start_at:)
-          present shift, with: Serialization::Shift
+          handle_operation_errors do
+            shift = ::Shift::Create.new.call(worker:, start_at:)
+            present shift, with: Serialization::Shift
+          end
         end
       end
     end

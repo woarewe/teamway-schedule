@@ -28,3 +28,7 @@ Style/WordArray:
 
 Style/Documentation:
   Enabled: false
+
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/**/*.rb
