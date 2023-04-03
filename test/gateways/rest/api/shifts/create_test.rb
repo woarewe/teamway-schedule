@@ -20,6 +20,14 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
     assert_response 201
   end
 
+  test "creating a new overnight shift for a worker" do
+    local_start = over_night_shift_local_start(@worker.time_zone)
+
+    assert_new_shift(@worker) { execute(@worker, local_start) }
+    assert_saving_shift_with_correct_attributes(booked_shift, @worker, local_start)
+    assert_response 201
+  end
+
   test "preventing booking another shift for the same day when the existing one starts" do
     local_start = far_future_local_time(@worker.time_zone)
     execute(@worker, local_start)
@@ -34,8 +42,7 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
     execute(@worker, local_start)
     next_day_local_start = local_shift_end(local_start).end_of_day - 4.hours
 
-    # assert_no_new_shifts(@worker) { execute(@worker, next_day_local_start) }
-    execute(@worker, next_day_local_start)
+    assert_no_new_shifts(@worker) { execute(@worker, next_day_local_start) }
     assert_response_with_double_book_error(next_day_local_start)
   end
 

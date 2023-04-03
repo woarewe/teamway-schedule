@@ -5,11 +5,11 @@ class Shift
     def call(worker:, start_at:)
       validate_start_at!(start_at)
       attributes = prepare_attributes(worker, start_at)
-      handle_duplication_error do
+      handle_exclusion_constraint(DOUBLE_BOOKING_CONSTRAINT) do
         Shift.create!(worker:, **attributes)
       end
-    rescue DuplicationError => error
-      process_duplication_error(error, attributes)
+    rescue ExclusionError
+      double_booking!(attributes.fetch(:local_start_date))
     end
 
     private
@@ -27,13 +27,8 @@ class Shift
       }
     end
 
-    def process_duplication_error(error, attributes)
-      case error.columns
-      in [_, :local_start_date]
-        raise DoubleBookError, I18n.t!("models.shift.errors.double_book", date: attributes.fetch(:local_start_date))
-      in [_, :local_end_date]
-        raise DoubleBookError, I18n.t!("models.shift.errors.double_book", date: attributes.fetch(:local_end_date))
-      end
+    def double_booking!(date)
+      raise DoubleBookingError, I18n.t!("models.shift.errors.double_booking", date:)
     end
   end
 end

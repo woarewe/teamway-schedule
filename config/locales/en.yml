@@ -14,7 +14,7 @@ en:
   models:
     shift:
       errors:
-        double_book: "The worker already has a shift on %{date}"
+        double_booking: "The worker already has a shift on %{date}"
         past_start: is in the past
 
   hello: "Hello world"

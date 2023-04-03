@@ -28,6 +28,7 @@ module WorkSchedule
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
+    config.active_record.schema_format = :sql
     config.api_only = true
   end
 end
