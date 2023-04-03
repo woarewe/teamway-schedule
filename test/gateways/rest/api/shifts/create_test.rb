@@ -4,94 +4,103 @@ require "test_helper"
 
 class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
   include Tests::Helpers::Authentication
+  include Tests::Helpers::Shifts
 
   setup do
     @worker = create(:worker)
+    @another_worker = create(:worker)
+    @credentials = create_credentials(owner: create(:admin))
   end
 
   test "creating a new shift for a worker" do
-    shift = build(:shift, worker:)
+    local_start = far_future_local_time(@worker.time_zone)
 
-    execute(payload(worker, shift))
-
-    assert_creating_shift_with_correct_attributes(shift)
+    assert_new_shift(@worker) { execute(@worker, local_start) }
+    assert_saving_shift_with_correct_attributes(booked_shift, @worker, local_start)
     assert_response 201
   end
 
   test "preventing booking another shift for the same day when the existing one starts" do
-    shift = build(:shift, :overnight, worker:)
-    execute(payload(worker, shift))
-    another_shift = build(:shift, :same_day, in_zone_time: shift.start_at, worker:)
+    local_start = far_future_local_time(@worker.time_zone)
+    execute(@worker, local_start)
+    same_day_local_start = local_start.beginning_of_day + 2.hours
 
-    execute(payload(worker, another_shift))
-
-    assert_response_with_double_book_error(another_shift)
+    assert_no_new_shifts(@worker) { execute(@worker, same_day_local_start) }
+    assert_response_with_double_book_error(same_day_local_start)
   end
 
   test "preventing booking another shift for the same day when the existing one ends" do
-    shift = build(:shift, :overnight, worker:)
-    execute(payload(worker, shift))
-    another_shift = build(:shift, :same_day, in_zone_time: shift.end_at, worker:)
+    local_start = over_night_shift_local_start(@worker.time_zone)
+    execute(@worker, local_start)
+    next_day_local_start = local_shift_end(local_start).end_of_day - 4.hours
 
-    execute(payload(worker, another_shift))
+    # assert_no_new_shifts(@worker) { execute(@worker, next_day_local_start) }
+    execute(@worker, next_day_local_start)
+    assert_response_with_double_book_error(next_day_local_start)
+  end
 
-    assert_response_with_double_book_error(another_shift)
+  test "creating shifts on the same day by UTC but on other by worker's time zone" do
+    time_zone = "Asia/Tbilisi"
+    worker = create(:worker, time_zone:)
+    future_local_time = far_future_local_time(time_zone)
+    local_start = future_local_time.beginning_of_day + 2.hours
+
+    assert_new_shift(worker) { execute(worker, local_start) }
+    assert_saving_shift_with_correct_attributes(booked_shift, worker, local_start)
+
+    previous_date_local_start = local_start.yesterday.beginning_of_day + 8.hours
+
+    assert_new_shift(worker) { execute(worker, previous_date_local_start) }
+    assert_saving_shift_with_correct_attributes(booked_shift, worker, previous_date_local_start)
   end
 
   test "preventing booking a shift in the past" do
-    shift = build(:shift, :in_past, worker:)
+    local_start = far_past_local_time(@worker.time_zone)
 
-    execute(payload(worker, shift))
-
+    assert_no_new_shifts(@worker) { execute(@worker, local_start) }
     assert_response_with_booking_in_past_error
   end
 
   private
 
-  attr_reader(
-    :worker
-  )
-
-  def execute(payload)
-    admin = create(:admin)
-    credentials = create_credentials(owner: admin)
+  def execute(worker, local_start)
     post(
       "/api/shifts",
-      params: payload,
-      headers: headers_with_auth(credentials)
+      params: payload(worker, local_start),
+      headers: headers_with_auth(@credentials)
     )
   end
 
-  def payload(worker, shift)
+  def payload(worker, local_start)
     {
       worker_id: worker.external_id,
       attributes: {
-        start_at: shift.start_at.in_time_zone(worker.time_zone).iso8601
+        start_at: local_start.iso8601
       }
     }
   end
 
   def booked_shift
-    @booked_shift ||= Shift.find_by(external_id: response_body.fetch(:id))
+    Shift.find_by(external_id: response_body.fetch(:id))
   end
 
   def response_body
     JSON.parse(@response.body).with_indifferent_access
   end
 
-  def assert_response_with_double_book_error(payload)
+  def assert_response_with_double_book_error(local_start)
     error = response_body.dig(:attributes, :start_at, 0)
-    date = payload.start_at.in_time_zone(worker.time_zone).to_date
 
     assert_response 422
     assert_match(/already/, error)
-    assert_match(/#{date.iso8601}/, error)
+    assert_match(/#{local_start.to_date.iso8601}/, error)
   end
 
-  def assert_creating_shift_with_correct_attributes(expected)
-    assert_equal expected.start_at, booked_shift.start_at
-    assert_equal expected.end_at.round, booked_shift.end_at
-    assert_equal worker.id, booked_shift.worker.id
+  def assert_saving_shift_with_correct_attributes(shift, worker, local_start)
+    assert_equal worker.id, shift.worker_id
+    assert_equal shift.start_at, local_start.utc
+    assert_equal shift.end_at, local_shift_end(local_start).utc
+    assert_equal worker.id, shift.worker_id
   end
 
   def assert_response_with_booking_in_past_error

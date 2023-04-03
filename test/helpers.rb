@@ -5,3 +5,4 @@ module Tests
 end
 
 require_relative "helpers/authentication"
+require_relative "helpers/shifts"
