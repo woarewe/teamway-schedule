@@ -4,6 +4,7 @@ module REST
   class API
     class Shifts < Base
       mount Create
+      mount Delete
     end
   end
 end
