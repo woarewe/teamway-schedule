@@ -17,7 +17,7 @@ class REST::API::Organizations::UpdateTest < ActionDispatch::IntegrationTest
     new_name = Faker::Company.name
 
     assert_no_new_organizations { execute(organization.external_id, new_name) }
-    assert_equal organization.reload.name, new_name
+    assert_equal new_name, organization.reload.name
   end
 
   test "not updating an organization name to the already existing one" do
@@ -27,7 +27,7 @@ class REST::API::Organizations::UpdateTest < ActionDispatch::IntegrationTest
     create(:organization, name: new_name)
 
     assert_no_new_organizations { execute(organization.external_id, new_name) }
-    assert_equal organization.reload.name, old_name
+    assert_equal old_name, organization.reload.name
   end
 
   private

@@ -15,7 +15,7 @@ class REST::API::Organizations::CreateTest < ActionDispatch::IntegrationTest
     name = Faker::Company.name
 
     assert_new_organization { execute(name) }
-    assert_equal saved_organization.name, name
+    assert_equal name, saved_organization.name
   end
 
   test "not creating a new organization with an empty name" do
