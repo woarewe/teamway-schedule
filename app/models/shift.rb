@@ -17,6 +17,7 @@ class Shift < ApplicationRecord
   scope :for_worker, ->(worker) { where(worker:) }
   scope :between, ->(from, to) { where(start_at: from.utc..to.utc) }
   scope :chronologically, -> { order(start_at: :asc) }
+  scope :serial, -> { order(created_at: :asc) }
 
   delegate :organization, to: :worker
 

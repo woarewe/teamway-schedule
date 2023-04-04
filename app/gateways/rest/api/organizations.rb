@@ -26,6 +26,7 @@ module REST
         mount Delete
 
         namespace(:shifts) { mount Shifts }
+        namespace(:workers) { mount Workers }
       end
     end
   end

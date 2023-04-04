@@ -12,6 +12,7 @@ module REST
               .for_organization(requested_organization)
               .between(from, to)
               .chronologically
+              .serial
           end
         end
 
@@ -24,7 +25,7 @@ module REST
           end
 
           rule(:from, :to) do
-            next if values[:to] - values[:from] > MAX_PERIOD.days
+            next if (values[:to] - values[:from]) <= MAX_PERIOD
 
             key(:period).failure(I18n.t!("rest.api.organizations.shifts.errors.long_period", period: MAX_PERIOD))
           end

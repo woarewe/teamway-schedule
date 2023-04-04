@@ -8,8 +8,12 @@ module REST
     helpers(
       Helpers::Authentication,
       Helpers::Validation,
-      Helpers::Authorization
+      Helpers::Authorization,
+      Helpers::Pagination
     )
+
+    PER_PAGE_LIMIT = 100
+    PER_PAGE_DEFAULT = 50
 
     before do
       authenticate!

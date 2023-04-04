@@ -10,5 +10,6 @@ class OrganizationPolicy < ApplicationPolicy
   end
 
   alias view_shifts? update?
+  alias view_workers? update?
   alias delete? update?
 end
