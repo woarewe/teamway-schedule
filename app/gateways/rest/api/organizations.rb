@@ -22,6 +22,9 @@ module REST
           find_requested_organization!
         end
 
+        mount Update
+        mount Delete
+
         namespace(:shifts) { mount Shifts }
       end
     end

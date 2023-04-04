@@ -5,7 +5,10 @@ class OrganizationPolicy < ApplicationPolicy
 
   alias create? admin?
 
-  def view_shifts?
+  def update?
     admin? || organization.manager?(user)
   end
+
+  alias view_shifts? update?
+  alias delete? update?
 end
