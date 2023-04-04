@@ -10,20 +10,15 @@ module REST
           end
         end
 
-        route_param :id do
-          desc "Update a worker"
-          put do
-            payload = validate!(params, with: Contract)
-            payload => { attributes: }
-            worker = Worker.find_by(external_id: params.fetch(:id))
-            not_found!(:id) if worker.nil?
-            authorize! worker, to: :update, with: WorkerPolicy
+        desc "Update a worker"
+        put do
+          authorize! requested_worker, to: :update, with: WorkerPolicy
+          validate!(params, with: Contract) => { attributes: }
 
-            if worker.update(attributes)
-              present worker, with: Serialization::Worker
-            else
-              wrapped_error!(worker.errors.as_json, 422, as: :attributes)
-            end
+          if requested_worker.update(attributes)
+            present requested_worker, with: Serialization::Worker
+          else
+            wrapped_error!(requested_worker.errors.as_json, 422, as: :attributes)
           end
         end
       end
