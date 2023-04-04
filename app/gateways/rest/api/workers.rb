@@ -22,6 +22,8 @@ module REST
           find_requested_worker!
         end
 
+        namespace(:shifts) { mount Shifts }
+
         mount Update
         mount Delete
         mount Get

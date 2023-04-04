@@ -17,6 +17,8 @@ class WorkerPolicy < ApplicationPolicy
     admin? || organization.worker?(user)
   end
 
+  alias view_shifts? show?
+
   private
 
   def organization

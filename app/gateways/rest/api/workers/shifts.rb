@@ -2,23 +2,23 @@
 
 module REST
   class API
-    class Organizations
+    class Workers
       class Shifts < Base
         helpers do
           def select_shifts(filters)
             filters => { from:, to: }
             ::Shift
               .includes(:worker)
-              .for_organization(requested_organization)
+              .for_worker(requested_worker)
               .between(from, to)
               .chronologically
               .serial
           end
         end
 
-        desc "Get organization shifts"
+        desc "Get worker's shifts"
         get do
-          authorize! requested_organization, to: :view_shifts, with: OrganizationPolicy
+          authorize! requested_worker, to: :view_shifts, with: WorkerPolicy
           filters = validate!(params, with: Validation::Shift::Filter)
           present select_shifts(filters), with: Serialization::Shift
         end
