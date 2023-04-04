@@ -37,3 +37,28 @@ bin/rails test
 bin/rubocop
 bin/rails zeitwerk:check
 ```
+
+## Project Structure
+
+The project uses gem Grape to build a REST gateway.
+
+```text
+app/gateways # Entry point, should contain supported gateways REST, GraphQL and etc
+└── rest # The folder for the REST gateway
+    ├── api # API Endpoints
+    ├── api.rb # API Endpoints entry point
+    ├── serialization # Response data serialization
+    ├── services # Operations specific for the REST gateways
+    └── validation # Endpoints request validations
+    
+app/models # Main entities
+├── admin.rb # Super user with access to all the operations
+├── authentication.rb # Credentials store
+├── organization.rb # An entity for grouping workers
+├── shift.rb
+└── worker.rb
+
+app/policies # Project policies
+
+app/operations # Domain operations that are independent from any gateway
+```
