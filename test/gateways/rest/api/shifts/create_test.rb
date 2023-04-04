@@ -5,6 +5,7 @@ require "test_helper"
 class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
   include Tests::Helpers::Authentication
   include Tests::Helpers::Shifts
+  include Tests::Helpers::API
 
   setup do
     @worker = create(:worker)
@@ -89,10 +90,6 @@ class REST::API::Shifts::CreateTest < ActionDispatch::IntegrationTest
 
   def booked_shift
     Shift.find_by(external_id: response_body.fetch(:id))
-  end
-
-  def response_body
-    JSON.parse(@response.body).with_indifferent_access
   end
 
   def assert_response_with_double_book_error(local_start)
