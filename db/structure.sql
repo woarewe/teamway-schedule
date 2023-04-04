@@ -365,6 +365,20 @@ CREATE UNIQUE INDEX index_shifts_on_external_id ON public.shifts USING btree (ex
 
 
 --
+-- Name: index_shifts_on_start_at_and_end_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shifts_on_start_at_and_end_at ON public.shifts USING btree (start_at, end_at);
+
+
+--
+-- Name: index_shifts_on_worker_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_shifts_on_worker_id ON public.shifts USING btree (worker_id);
+
+
+--
 -- Name: index_workers_on_external_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -407,6 +421,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230331212610'),
 ('20230401100644'),
 ('20230401124829'),
-('20230401165334');
+('20230401165334'),
+('20230404154936');
 
 

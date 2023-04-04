@@ -1,5 +1,10 @@
 en:
   rest:
+    api:
+      organizations:
+        shifts:
+          errors:
+            long_period: "The retrieving period should be <= %{period} days"
     services:
       authentication:
         errors:
