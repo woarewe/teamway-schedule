@@ -15,10 +15,6 @@ module REST
     PER_PAGE_LIMIT = 100
     PER_PAGE_DEFAULT = 50
 
-    before do
-      authenticate!
-    end
-
     namespace(:organizations) { mount Organizations }
     namespace(:workers) { mount Workers }
     namespace(:shifts) { mount Shifts }

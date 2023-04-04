@@ -29,7 +29,7 @@ module REST
         invalid_format! if invalid_scheme?(scheme)
 
         Base64
-          .decode64(token)
+          .decode64(token.to_s)
           .then { |decoded| decoded.split(":") }
           .tap { |username, password| invalid_format! if username.nil? || password.nil? }
       end
