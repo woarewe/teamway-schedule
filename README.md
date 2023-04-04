@@ -62,3 +62,28 @@ app/policies # Project policies
 
 app/operations # Domain operations that are independent from any gateway
 ```
+
+## Exploring API
+
+Since the project is based on Grape it can generate "some" Swagger-compatible
+documentation for no cost. To get all the possible endpoints:
+
+1. Start your local server
+2. Visit `/api/swagger`
+3. Grab the response JSON
+4. Paste it into [the swagger](https://editor.swagger.io/) redactor on
+
+**NOTE**
+The swagger documentation contains only the endpoints **WITHOUT**
+the input parameters and the response type.
+The input parameters are described by validation contracts in every endpoint.
+The output parameters are represent by gateway serializers.
+
+Even though, the project has a comprehensive policy layer, the easiest way of 
+accessing endpoints is using admin credentials.
+Just run the following command and put its output to
+`Authorization` header in your REST API Client.
+
+```shell
+ADMIN_USERNAME=admin ADMIN_PASSWORD=password bin/rake admin:create
+```
