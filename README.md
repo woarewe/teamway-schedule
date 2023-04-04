@@ -1,24 +1,39 @@
-# README
+## Requriements
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+You can read the project requirements [here](./REQUIREMENTS.md)
 
-Things you may want to cover:
+## Dependecies
 
-* Ruby version
+ - PostgreSQL 14.2
+ - Ruby 3.1.3
 
-* System dependencies
+## Setting up project locally
 
-* Configuration
+### Configuring database using Docker
 
-* Database creation
+```shell
+docker pull postgres:14.2
+docker volume create working_schedule
+docker container create --name working_schedule --publish 5432:5432 --env POSTGRES_USER=postgres --env POSTGRES_PASSWORD=password --volume working_schedule:/var/lib/postgresql/data postgres:14.2
+docker start working_schedule
+```
 
-* Database initialization
+### Setting ENV variables
 
-* How to run the test suite
+```shell
+cp .env.example .env
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+### Preparing databases
 
-* Deployment instructions
+```shell
+bin/rake db:create db:schema:load
+```
 
-* ...
+### Checking tests, Rubocop and Zeitwerk
+
+```shell
+bin/rails test
+bin/rubocop
+bin/rails zeitwerk:check
+```
