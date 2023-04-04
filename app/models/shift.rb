@@ -13,6 +13,11 @@ class Shift < ApplicationRecord
 
   belongs_to :worker, inverse_of: :shifts
 
+  scope :for_organization, ->(organization) { joins(:worker).where(workers: { organization: }) }
+  scope :for_worker, ->(worker) { where(worker:) }
+  scope :between, ->(from, to) { where(start_at: from.utc..to.utc) }
+  scope :chronologically, -> { order(start_at: :asc) }
+
   delegate :organization, to: :worker
 
   def duration
